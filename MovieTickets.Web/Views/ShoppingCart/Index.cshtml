@@ -1,0 +1,87 @@
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<MovieTickets.Domain.StripeSettings> Stripe
+@model MovieTickets.Domain.DTO.ShoppingCartDto
+    @{
+        ViewData["Title"] = "Index";
+    }
+
+    <h2>Shopping Cart</h2>
+    <br>
+
+    <div class="container">
+       
+        <div class="row m-4">
+            @*<a asp-controller="ShoppingCart" asp-action="OrderNow" class="btn btn-info">Order Now</a>*@
+
+            @if (Model.TotalPrice != 0)
+            {
+                <form asp-controller="ShoppingCart" asp-action="PayOrder" method="post">
+                    <article>
+                        <script src="https://checkout.stripe.com/checkout.js"
+                                class="stripe-button"
+                                data-key="@Stripe.Value.PublishableKey"
+                                data-locale="auto"
+                                data-description="ETicket Application Payment"
+                                data-amount="@(Model.TotalPrice * 100)"
+                                data-label="Order Now">
+                        </script>
+                    </article>
+                </form>
+            }
+
+        </div>
+                <br />
+                <table class="table">
+
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                #
+                            </th>
+                            <th scope="col">
+                                Movie Name
+                            </th>
+                            <th scope="col">
+                                Ticket Price
+                            </th>
+                            <th scope="col">
+                                Quantity
+                            </th>
+                            <th scope="col">
+                                Sum
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            var i = 1;
+                            foreach (var item in Model.Tickets)
+                            {
+                                <tr>
+                                    <td>@(i++)</td>
+                                    <td>@item.Ticket.MovieName</td>
+                                    <td>@item.Ticket.Price $</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@(item.Quantity * item.Ticket.Price) $</td>
+                                    <td><a class="btn btn-danger" asp-controller="ShoppingCart" asp-action="DeleteFromShoppingCart" asp-route-ticketId="@item.Ticket.Id">Delete</a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <th>Total:</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th><b>@Model.TotalPrice $</b></th>
+                        </tr>
+                    </tfoot>
+
+                </table>
+                
+            </div>

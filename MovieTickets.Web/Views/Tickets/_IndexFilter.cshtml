@@ -1,0 +1,43 @@
+﻿@model List<MovieTickets.Domain.DomainModels.Ticket>
+
+@for (int i = 0; i < Model.Count; i++)
+{
+    var item = Model[i];
+    if (i % 3 == 0)
+    {
+
+        @:<div class="row">
+        }
+
+        <div class="col-md-3 m-4">
+            <div class="card" style="width:20rem; height:40rem">
+
+                <img class="card-img-top" src="@item.Image" alt="Image for Ticket" style="width: 318px; height: 250px; align-content: center" />
+
+                <div class="card-body">
+                    <h5 class="card-title">@item.MovieName</h5>
+                    <p class="card-text">@item.MovieDescription</p>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Genre: @item.Genre</p>
+                    <p class="card-text">Date: @item.Date</p>
+                </div>
+
+                <div class="ml-3">
+                    <h5 class="card-title">Price: @item.Price $</h5>
+                </div>
+
+                <div class="card-footer">
+                    <a asp-controller="Tickets" asp-route-id="@item.Id" asp-action="AddToShoppingCart" class="btn btn-info">Add to Cart</a>
+                    <a asp-controller="Tickets" asp-route-id="@item.Id" asp-action="Edit" class="btn btn-secondary">Edit</a>
+                </div>
+
+            </div>
+        </div>
+
+        if (i % 3 == 2)
+        {
+        @:</div>
+    }
+
+}

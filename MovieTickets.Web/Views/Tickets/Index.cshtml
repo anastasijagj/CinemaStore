@@ -1,0 +1,78 @@
+﻿@model MovieTickets.Domain.SpecialCollectionSearch
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="m-3">
+        <a class="btn btn-success" asp-action="Create" asp-controller="Tickets">Add New</a>
+    </div>
+
+    <div>
+        <form class="form-group">
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <div class="col-md-auto">
+                        <label>Genre:</label>&nbsp;
+                        <select id="searchTypeSelection" asp-for="SearchGenre" asp-items=@Model.TypeOptions required>
+                            <option value="All">All</option>
+                        </select>
+                    </div>
+                    <div class="col-md-auto">
+                        <label>From:</label>&nbsp;
+                        <input id="fromDate" type="text" asp-for="FromDate" class="datePicker" required />
+                    </div>
+                    <div class="col-md-auto">
+                        <label>To:</label>&nbsp;
+                        <input id="toDate" type="text" asp-for="ToDate" class="datePicker" required />
+                    </div>
+                    <div class="col-md-auto">
+                        <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+        <div id="content">
+            <partial name="_IndexFilter.cshtml" model="Model.SearchResults" />
+        </div>
+
+        @section Scripts{
+            <script>
+        function ApplyDateFilter(e) {
+            e.preventDefault();
+            var from = $("#fromDate").val();
+            var to = $("#toDate").val();
+            var type = $("#searchTypeSelection").val();
+            var text = $("#searchText").val();
+            debugger;
+            $.ajax({
+                type: "Get",
+                url: '@Url.Action("IndexFilter", "Archives")',
+                data: //formData,
+                {
+                    FromDate: from,
+                    ToDate: to,
+                    SearchType: type,
+                    SearchText: text
+                },
+                contentType: "application/json",
+                success: function (response) {
+                    $("#content").html(""); 
+                    $("#content").html(response);  
+                }
+            });
+        }
+            </script>
+        }
+    </div>
+
+</div>
+
+
+
+
+
